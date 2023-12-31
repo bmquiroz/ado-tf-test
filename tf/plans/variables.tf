@@ -5,7 +5,7 @@ variable "backend-bucket" {
 
 variable "backend-key" {
   type        = string
-  default     = "ado-tf-test"
+  default     = "ado-tf-test/"
 }
 
 variable "backend-region" {

@@ -1,9 +1,9 @@
 # Core Deployment Information
-variable "env" { type = string }
+# variable "env" { type = string }
 
-variable "application" { type = string }
+# variable "application" { type = string }
 
-variable "uai" { type = string }
+# variable "uai" { type = string }
 
 # variable "aws_region" { type = string }
 
@@ -13,11 +13,11 @@ variable "uai" { type = string }
 
 variable "aws_subnet_compute_id" { type = list(any) }
 
-variable "tagging_standard" { type = map(any) }
+# variable "tagging_standard" { type = map(any) }
 
-variable "aws_vpc_main_id" { type = string }
+# variable "aws_vpc_main_id" { type = string }
 
-variable "vpc_cidr" { type = string }
+# variable "vpc_cidr" { type = string }
 
 # variable "aws_subnet_public_id" { type = list(any) }
 
@@ -27,7 +27,7 @@ variable "vpc_cidr" { type = string }
 
 variable "aws_key_pair" { type = string }
 
-variable "instance_ec2_settings" { type = map(any) }
+# variable "instance_ec2_settings" { type = map(any) }
 
 # variable "trusted_cidrs" { type = list }
 
@@ -50,4 +50,10 @@ variable "blue_template_name" {
 variable "asg_name" {
   type        = string
   default     = null
+}
+
+variable "network_interfaces" {
+  description = "Customize network interfaces to be attached at instance boot time"
+  type        = list(any)
+  default     = []
 }
