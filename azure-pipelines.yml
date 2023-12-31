@@ -3,18 +3,27 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- main
+trigger: none
+# - main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
   - task: TerraformTaskV1@0
-    displayName: 'terraform init'
+    displayName: 'terraform-init'
     inputs:
       provider: 'aws'
       command: 'init'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/tf/plans/rcits-aws-cloud'
+      backendServiceAWS: 'rcits-aws-1'
+      backendAWSBucketName: 'rcits-terraform'
+      backendAWSKey: 'ado-tf-test'
+  - task: TerraformTaskV4@4
+    displayName: 'terraform-apply'
+    inputs:
+      provider: 'aws'
+      command: 'apply'
       workingDirectory: '$(System.DefaultWorkingDirectory)/tf/plans/rcits-aws-cloud'
       backendServiceAWS: 'rcits-aws-1'
       backendAWSBucketName: 'rcits-terraform'
