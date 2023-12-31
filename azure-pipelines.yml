@@ -9,19 +9,13 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-stages:    
-  - stage: Dev
-    displayName: Dev
-    jobs:
-      - job: plan
-        pool:
-          vmImage: ubuntu-latest
-        displayName:  Terraform Dev Init and Apply
-        steps:
-        - task: TerraformTaskV4@4
-          inputs:
-            provider: 'aws'
-            command: 'init'
-            backendServiceAWS: 'rcits-aws-1'
-            backendAWSBucketName: 'rcits-terraform'
-            backendAWSKey: 'ado-tf-test'
+steps:
+  - task: TerraformTaskV1@0
+    displayName: 'terraform init'
+    inputs:
+      provider: 'aws'
+      command: 'init'
+      workingDirectory: '$(System.DefaultWorkingDirectory)/tf/plans'
+      backendServiceAWS: 'rcits-aws-1'
+      backendAWSBucketName: 'rcits-terraform'
+      backendAWSKey: 'ado-tf-test'
