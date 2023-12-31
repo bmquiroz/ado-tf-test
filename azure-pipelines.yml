@@ -19,7 +19,8 @@ steps:
       backendServiceAWS: 'rcits-aws-1'
       backendAWSBucketName: 'rcits-terraform'
       backendAWSKey: 'ado-tf-test'
-  - task: TerraformTaskV4@4
+  # - task: TerraformTaskV4@4
+  - task: TerraformTaskV1@0
     displayName: 'terraform-apply'
     inputs:
       provider: 'aws'
