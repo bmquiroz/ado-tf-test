@@ -132,7 +132,7 @@ resource "aws_autoscaling_group" "blue-green-asg" {
   # force_delete              = true
   # placement_group           = aws_placement_group.test.id
   # launch_configuration      = aws_launch_configuration.foobar.name
-  vpc_zone_identifier       = [aws_subnet_compute_id]
+  vpc_zone_identifier       = [var.aws_subnet_compute_id]
 
   # instance_maintenance_policy {
   #   min_healthy_percentage = 90
