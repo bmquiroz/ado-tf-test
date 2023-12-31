@@ -26,6 +26,4 @@ steps:
       provider: 'aws'
       command: 'apply'
       workingDirectory: '$(System.DefaultWorkingDirectory)/tf/plans/rcits-aws-cloud'
-      backendServiceAWS: 'rcits-aws-1'
-      backendAWSBucketName: 'rcits-terraform'
-      backendAWSKey: 'ado-tf-test'
+      environmentServiceNameAWS: 'rcits-aws-1'
