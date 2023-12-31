@@ -10,47 +10,47 @@
 #   )
 # }
 
-resource "aws_iam_role" "instance-role" {
-  name = "rcits-poc-ssm-ec2-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-}
+# resource "aws_iam_role" "instance-role" {
+#   name = "rcits-poc-ssm-ec2-role"
+#   assume_role_policy = <<EOF
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Action": "sts:AssumeRole",
+#       "Principal": {
+#         "Service": "ec2.amazonaws.com"
+#       },
+#       "Effect": "Allow",
+#       "Sid": ""
+#     }
+#   ]
+# }
+# EOF
+# }
 
-resource "aws_iam_instance_profile" "instance-profile" {
-  name = "rcits-poc-ssm-ec2-profile"
-  role = "${aws_iam_role.instance-role.id}"
-}
+# resource "aws_iam_instance_profile" "instance-profile" {
+#   name = "rcits-poc-ssm-ec2-profile"
+#   role = "${aws_iam_role.instance-role.id}"
+# }
 
-resource "aws_iam_policy_attachment" "instance-policy-attach1" {
-  name       = "instance-ssm-attachment1"
-  roles      = [aws_iam_role.instance-role.id]
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
+# resource "aws_iam_policy_attachment" "instance-policy-attach1" {
+#   name       = "instance-ssm-attachment1"
+#   roles      = [aws_iam_role.instance-role.id]
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+# }
 
-resource "aws_iam_policy_attachment" "instance-policy-attach2" {
-  name       = "instance-ssm-attachment2"
-  roles      = [aws_iam_role.instance-role.id]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-}
+# resource "aws_iam_policy_attachment" "instance-policy-attach2" {
+#   name       = "instance-ssm-attachment2"
+#   roles      = [aws_iam_role.instance-role.id]
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+# }
 
-resource "aws_iam_policy_attachment" "instance-policy-attach3" {
-  name       = "instance-ssm-attachment3"
-  roles      = [aws_iam_role.instance-role.id]
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-}
+# resource "aws_iam_policy_attachment" "instance-policy-attach3" {
+#   name       = "instance-ssm-attachment3"
+#   roles      = [aws_iam_role.instance-role.id]
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+# }
 
 resource "aws_instance" "instance" {
   count = lookup(var.instance_ec2_settings, "instance_count")
@@ -61,8 +61,8 @@ resource "aws_instance" "instance" {
   ebs_optimized        = true
   vpc_security_group_ids = [aws_security_group.instance-sg.id]
   subnet_id            = "${element(var.aws_subnet_compute_id,0)}"
-  iam_instance_profile = "${aws_iam_instance_profile.instance-profile.id}"
-  associate_public_ip_address = var.associate_public_ip_address
+  # iam_instance_profile = "${aws_iam_instance_profile.instance-profile.id}"
+  # associate_public_ip_address = var.associate_public_ip_address
   # user_data            = "${file("bootstrap.sh")}"
 
   # metadata_options {
