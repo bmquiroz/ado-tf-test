@@ -168,4 +168,10 @@ resource "aws_autoscaling_group" "blue-green-asg" {
 #     value               = "ipsum"
 #     propagate_at_launch = false
 #   }
+
+  launch_template {
+    id      = aws_launch_template.blue-template.id
+    # version = "$Latest"
+    version = aws_launch_template.blue-template.latest_version
+  }
 }
