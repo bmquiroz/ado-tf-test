@@ -15,9 +15,6 @@ terraform {
 provider "aws" {
   region = "us-east-1"
   profile = "default"
-#   assume_role {
-#   role_arn = "arn:aws:iam::000000:role/rcits-explorer"
-#     }
 }
 
 module "asg-blue-green-deploy" {
@@ -29,9 +26,10 @@ module "asg-blue-green-deploy" {
   aws_subnet_compute_id       = ["subnet-047543b5ae3b70ee4"]
   aws_key_pair                = "rcits-poc-key1"
   ssm_parameter_name          = "win-2019-v1"
-  blue_template_name          = "rcits-blue-template-v1"
-  green_template_name         = "rcits-green-template-v1"
+  blue_template_name          = "rcits-blue-template"
+  green_template_name         = "rcits-green-template"
   asg_name                    = "rcits-blue-green-asg"
+  instance_type               = "t2.micro"
   max_size                    = 4
   min_size                    = 2
   capacity                    = 4

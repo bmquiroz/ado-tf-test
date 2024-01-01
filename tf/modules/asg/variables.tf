@@ -29,6 +29,11 @@ variable "ssm_parameter_name" {
   default     = null
 }
 
+variable "instance_type" {
+  type        = string
+  default     = null
+}
+
 variable "blue_template_name" {
   type        = string
   default     = null

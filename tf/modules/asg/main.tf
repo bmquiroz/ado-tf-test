@@ -1,3 +1,19 @@
+# data "aws_ami" "ami" {
+#   most_recent = true
+
+#   filter {
+#     name   = "name"
+#     values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+#   }
+
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+
+#   owners = ["099720109477"]
+# }
+
 data "aws_ssm_parameter" "ami" {
   name = var.ssm_parameter_name
 }
@@ -5,7 +21,7 @@ data "aws_ssm_parameter" "ami" {
 resource "aws_launch_template" "blue-template" {
   name = var.blue_template_name
   image_id = data.aws_ssm_parameter.ami.value
-  instance_type = "t2.micro"
+  instance_type = var.instance_type
   key_name = var.aws_key_pair
 
   dynamic "network_interfaces" {
@@ -32,7 +48,7 @@ resource "aws_launch_template" "blue-template" {
 resource "aws_launch_template" "green-template" {
   name = var.green_template_name
   image_id = data.aws_ssm_parameter.ami.value
-  instance_type = "t2.micro"
+  instance_type = var.instance_type
   key_name = var.aws_key_pair
 
   dynamic "network_interfaces" {
@@ -68,4 +84,11 @@ resource "aws_autoscaling_group" "blue-green-asg" {
     # version = aws_launch_template.blue-template.latest_version
     version = aws_launch_template.green-template.latest_version
   }
+
+  # dynamic "launch_template" {
+  #   for_each = var.elastic_inference_accelerator != null ? [var.elastic_inference_accelerator] : []
+  #   content {
+  #     type = elastic_inference_accelerator.value.type
+  #   }
+  # }
 }
