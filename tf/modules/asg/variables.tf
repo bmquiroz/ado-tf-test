@@ -47,6 +47,11 @@ variable "blue_template_name" {
   default     = null
 }
 
+variable "green_template_name" {
+  type        = string
+  default     = null
+}
+
 variable "asg_name" {
   type        = string
   default     = null
