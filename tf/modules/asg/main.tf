@@ -122,7 +122,7 @@ resource "aws_launch_template" "blue-template" {
 # }
 
 resource "aws_autoscaling_group" "blue-green-asg" {
-  availability_zones        = ["us-east-1a"]
+  # availability_zones        = ["us-east-1a"]
   name                      = var.asg_name
   max_size                  = 2
   min_size                  = 1
