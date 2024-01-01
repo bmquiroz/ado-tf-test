@@ -32,6 +32,9 @@ module "asg-blue-green-deploy" {
   blue_template_name          = "rcits-blue-template-v1"
   green_template_name         = "rcits-green-template-v1"
   asg_name                    = "rcits-blue-green-asg"
+  max_size                    = 4
+  min_size                    = 2
+  capacity                    = 4
   network_interfaces          = [{security_groups = ["sg-01e52f58d04156a9c"]}]
   # tagging_standard            =  {
   #                               "deployment"  = "sandbox"
