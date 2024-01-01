@@ -145,11 +145,11 @@ resource "aws_launch_template" "green-template" {
 resource "aws_autoscaling_group" "blue-green-asg" {
   # availability_zones        = ["us-east-1a"]
   name                      = var.asg_name
-  max_size                  = 4
+  max_size                  = 2
   min_size                  = 1
   # health_check_grace_period = 300
   # health_check_type         = "ELB"
-  desired_capacity          = 4
+  desired_capacity          = 2
   # force_delete              = true
   # placement_group           = aws_placement_group.test.id
   # launch_configuration      = aws_launch_configuration.foobar.name
