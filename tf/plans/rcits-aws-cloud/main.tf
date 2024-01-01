@@ -34,7 +34,7 @@ module "asg-blue-green-deploy" {
   ssm_parameter_name          = "win-2019-v1"
   blue_template_name          = "rcits-blue-template-v1"
   asg_name                    = "rcits-blue-green-asg"
-  network_interfaces          = [{security_groups = ["sg-045a986bf9cd39133"]}]
+  network_interfaces          = [{security_groups = ["sg-01e52f58d04156a9c"]}]
   # tagging_standard            =  {
   #                               "deployment"  = "sandbox"
   #                               "patch" = "yes"
