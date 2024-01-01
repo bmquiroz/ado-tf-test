@@ -10,13 +10,13 @@
 
 # variable "ip_subnets" { type = map(any) }
 
-variable "aws_subnet_compute_id" { type = list(any) }
+# variable "instance_ec2_settings" { type = map(any) }
 
 # variable "tagging_standard" { type = map(any) }
 
-variable "aws_key_pair" { type = string }
+variable "aws_subnet_compute_id" { type = list(any) }
 
-# variable "instance_ec2_settings" { type = map(any) }
+variable "aws_key_pair" { type = string }
 
 variable "associate_public_ip_address" {
   description = "Whether to associate a public IP address with an instance in a VPC"
@@ -67,5 +67,10 @@ variable "min_size" {
 
 variable "capacity" {
   type        = number
+  default     = null
+}
+
+variable "deployment_color" {
+  type        = string
   default     = null
 }

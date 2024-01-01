@@ -80,15 +80,10 @@ resource "aws_autoscaling_group" "blue-green-asg" {
   vpc_zone_identifier       = var.aws_subnet_compute_id
 
   launch_template {
-    id      = aws_launch_template.green-template.id
-    # version = aws_launch_template.blue-template.latest_version
-    version = aws_launch_template.green-template.latest_version
-  }
+    # id      = aws_launch_template.green-template.id
+    # version = aws_launch_template.green-template.latest_version
 
-  # dynamic "launch_template" {
-  #   for_each = var.elastic_inference_accelerator != null ? [var.elastic_inference_accelerator] : []
-  #   content {
-  #     type = elastic_inference_accelerator.value.type
-  #   }
-  # }
+    id      = var.deployment_color == "green" ? aws_launch_template.green-template.id : aws_launch_template.blue-template.id
+    version = var.deployment_color == "green" ? aws_launch_template.green-template.latest_version : aws_launch_template.blue-template.latest_version
+  }
 }
