@@ -191,7 +191,7 @@ resource "aws_autoscaling_group" "blue-green-asg" {
 #   }
 
   launch_template {
-    id      = aws_launch_template.blue-template.id
+    id      = aws_launch_template.green-template.id
     # version = "$Latest"
     # version = aws_launch_template.blue-template.latest_version
     version = aws_launch_template.green-template.latest_version
