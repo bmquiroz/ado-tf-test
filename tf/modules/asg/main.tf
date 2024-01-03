@@ -43,6 +43,9 @@ resource "aws_launch_template" "blue-template" {
       subnet_id                    = lookup(network_interfaces.value, "subnet_id", null)
     }
   }
+
+  user_data = filebase64("${path.module}/tower-callback-bootstrap.ps1")
+
 }
 
 resource "aws_launch_template" "green-template" {
@@ -70,6 +73,9 @@ resource "aws_launch_template" "green-template" {
       subnet_id                    = lookup(network_interfaces.value, "subnet_id", null)
     }
   }
+
+  user_data = filebase64("${path.module}/tower-callback-bootstrap.ps1")
+  
 }
 
 resource "aws_autoscaling_group" "blue-green-asg" {
