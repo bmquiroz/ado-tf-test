@@ -34,7 +34,7 @@ module "asg-blue-green-deploy" {
   min_size                    = 1
   capacity                    = 2
   network_interfaces          = [{security_groups = ["sg-01e52f58d04156a9c"]}]
-  deployment_color            = "green"
+  deployment_color            = "blue"
   # tagging_standard            =  {
   #                               "deployment"  = "sandbox"
   #                               "patch" = "yes"
