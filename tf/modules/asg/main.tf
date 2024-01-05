@@ -143,3 +143,38 @@ resource "aws_autoscaling_attachment" "blue-green-asg-tg-att" {
   autoscaling_group_name = aws_autoscaling_group.blue-green-asg.id
   lb_target_group_arn    = aws_lb_target_group.blue-green-asg-tg.arn
 }
+
+resource "aws_lb_listener" "blue-green-alb-listener" {
+  load_balancer_arn = aws_lb.blue-green-alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Fixed response content"
+      status_code  = "200"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "blue-green-alb-listener-rule" {
+  listener_arn = aws_lb_listener.blue-green-alb-listener.arn
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.blue-green-asg-tg.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/home"]
+    }
+
+    http_request_method {
+      values = ["GET", "HEAD"]
+    }
+  }
+}
