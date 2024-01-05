@@ -18,11 +18,45 @@ data "aws_ssm_parameter" "ami" {
   name = var.ssm_parameter_name
 }
 
+resource "random_integer" "resource_id" {
+  min = 1
+  max = 50
+}
+
+resource "aws_lb" "blue-green-alb" {
+  name               = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-alb"
+  internal           = true
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.lb_sg.id]
+  # subnets            = [for subnet in aws_subnet.public : subnet.id]
+  subnets            = [var.aws_subnet_compute_id]
+
+  # enable_deletion_protection = true
+
+  # access_logs {
+  #   bucket  = aws_s3_bucket.lb_logs.id
+  #   prefix  = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-alb"
+  #   enabled = true
+  # }
+}
+
+resource "aws_lb_target_group" "blue-green-asg-tg" {
+  name     = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-alb-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+}
+
+resource "aws_autoscaling_attachment" "blue-green-asg-tg-att" {
+  autoscaling_group_name = aws_autoscaling_group.blue-green-asg.id
+  lb_target_group_arn    = aws_lb_target_group.blue-green-asg-tg.arn
+}
+
 resource "aws_launch_template" "blue-template" {
-  name = var.blue_template_name
-  image_id = data.aws_ssm_parameter.ami.value
-  instance_type = var.instance_type
-  key_name = var.aws_key_pair
+  name                  = var.blue_template_name
+  image_id              = data.aws_ssm_parameter.ami.value
+  instance_type         = var.instance_type
+  key_name              = var.aws_key_pair
 
   dynamic "network_interfaces" {
     for_each = var.network_interfaces
@@ -41,6 +75,14 @@ resource "aws_launch_template" "blue-template" {
       private_ip_address           = lookup(network_interfaces.value, "private_ip_address", null)
       security_groups              = lookup(network_interfaces.value, "security_groups", null)
       subnet_id                    = lookup(network_interfaces.value, "subnet_id", null)
+    }
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-${random_integer.resource_id.result}"
     }
   }
 
@@ -49,10 +91,10 @@ resource "aws_launch_template" "blue-template" {
 }
 
 resource "aws_launch_template" "green-template" {
-  name = var.green_template_name
-  image_id = data.aws_ssm_parameter.ami.value
-  instance_type = var.instance_type
-  key_name = var.aws_key_pair
+  name                  = var.blue_template_name
+  image_id              = data.aws_ssm_parameter.ami.value
+  instance_type         = var.instance_type
+  key_name              = var.aws_key_pair
 
   dynamic "network_interfaces" {
     for_each = var.network_interfaces
@@ -74,16 +116,24 @@ resource "aws_launch_template" "green-template" {
     }
   }
 
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-${random_integer.resource_id.result}"
+    }
+  }
+
   user_data = filebase64("${path.module}/tower-callback-bootstrap.ps1")
   
 }
 
 resource "aws_autoscaling_group" "blue-green-asg" {
-  name                      = var.asg_name
-  max_size                  = var.max_size
-  min_size                  = var.min_size
-  desired_capacity          = var.capacity
-  vpc_zone_identifier       = var.aws_subnet_compute_id
+  name                  = var.asg_name
+  max_size              = var.max_size
+  min_size              = var.min_size
+  desired_capacity      = var.capacity
+  vpc_zone_identifier   = var.aws_subnet_compute_id
 
   launch_template {
     # id      = aws_launch_template.green-template.id

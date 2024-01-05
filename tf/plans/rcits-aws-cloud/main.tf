@@ -19,9 +19,6 @@ provider "aws" {
 
 module "asg-blue-green-deploy" {
   source                      = "../../modules/asg"
-  # env                         = "sandbox"
-  # application                 = "rcits"
-  # uai                         = "123"
   # aws_region                 = "us-east-1"
   aws_subnet_compute_id       = ["subnet-047543b5ae3b70ee4"]
   aws_key_pair                = "rcits-poc-key1"
@@ -35,11 +32,12 @@ module "asg-blue-green-deploy" {
   capacity                    = 2
   network_interfaces          = [{security_groups = ["sg-01e52f58d04156a9c"]}]
   deployment_color            = "blue"
-  # tagging_standard            =  {
-  #                               "deployment"  = "sandbox"
-  #                               "patch" = "yes"
-  #                               "tag2" = "tag2"
-  #                               }
+  vpc_id                      = "vpc-03d790a49d55d25c2"
+  tagging_standard            =  {
+                                "env"         = "dev"
+                                "application" = "rcits"
+                                "asset_id"    = "123"
+                                }
   # instance_ec2_settings       =  {
   #                               "ami"  = "ami-093693792d26e4373"
   #                               "instance_type" = "t3.small"

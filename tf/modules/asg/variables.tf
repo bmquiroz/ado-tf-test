@@ -12,7 +12,7 @@
 
 # variable "instance_ec2_settings" { type = map(any) }
 
-# variable "tagging_standard" { type = map(any) }
+variable "tagging_standard" { type = map(any) }
 
 variable "aws_subnet_compute_id" { type = list(any) }
 
@@ -71,6 +71,11 @@ variable "capacity" {
 }
 
 variable "deployment_color" {
+  type        = string
+  default     = null
+}
+
+variable "vpc_id" {
   type        = string
   default     = null
 }
