@@ -133,7 +133,7 @@ resource "aws_autoscaling_group" "blue-green-asg" {
   max_size              = var.max_size
   min_size              = var.min_size
   desired_capacity      = var.capacity
-  vpc_zone_identifier   = element(var.aws_subnet_compute_id, 0)
+  vpc_zone_identifier = [element(var.aws_subnet_compute_id, 0)]
 
   launch_template {
     # id      = aws_launch_template.green-template.id
