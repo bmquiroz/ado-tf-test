@@ -29,7 +29,7 @@ resource "aws_lb" "blue-green-alb" {
   load_balancer_type = "application"
   security_groups    = [var.alb_sg_id]
   # subnets            = [for subnet in aws_subnet.public : subnet.id]
-  subnets            = [var.aws_subnet_compute_id]
+  subnets            = var.aws_subnet_compute_id
 
   # enable_deletion_protection = true
 
