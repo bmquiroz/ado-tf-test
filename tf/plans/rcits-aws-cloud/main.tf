@@ -20,7 +20,7 @@ provider "aws" {
 module "asg-blue-green-deploy" {
   source                      = "../../modules/asg"
   # aws_region                 = "us-east-1"
-  aws_subnet_compute_id       = ["subnet-047543b5ae3b70ee4"]
+  aws_subnet_compute_id       = ["subnet-047543b5ae3b70ee4", "subnet-0b5db106bf59025c2"]
   aws_key_pair                = "rcits-poc-key1"
   ssm_parameter_name          = "win-2019-v1"
   blue_template_name          = "rcits-blue-template"
