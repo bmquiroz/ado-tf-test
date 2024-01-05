@@ -23,35 +23,6 @@ resource "random_integer" "resource_id" {
   max = 50
 }
 
-resource "aws_lb" "blue-green-alb" {
-  name               = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-alb"
-  internal           = true
-  load_balancer_type = "application"
-  security_groups    = [var.alb_sg_id]
-  # subnets            = [for subnet in aws_subnet.public : subnet.id]
-  subnets            = var.aws_subnet_compute_id
-
-  # enable_deletion_protection = true
-
-  # access_logs {
-  #   bucket  = aws_s3_bucket.lb_logs.id
-  #   prefix  = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-alb"
-  #   enabled = true
-  # }
-}
-
-resource "aws_lb_target_group" "blue-green-asg-tg" {
-  name     = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-alb-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
-}
-
-resource "aws_autoscaling_attachment" "blue-green-asg-tg-att" {
-  autoscaling_group_name = aws_autoscaling_group.blue-green-asg.id
-  lb_target_group_arn    = aws_lb_target_group.blue-green-asg-tg.arn
-}
-
 resource "aws_launch_template" "blue-template" {
   name                  = var.blue_template_name
   image_id              = data.aws_ssm_parameter.ami.value
@@ -91,7 +62,7 @@ resource "aws_launch_template" "blue-template" {
 }
 
 resource "aws_launch_template" "green-template" {
-  name                  = var.blue_template_name
+  name                  = var.green_template_name
   image_id              = data.aws_ssm_parameter.ami.value
   instance_type         = var.instance_type
   key_name              = var.aws_key_pair
@@ -142,4 +113,33 @@ resource "aws_autoscaling_group" "blue-green-asg" {
     id      = var.deployment_color == "green" ? aws_launch_template.green-template.id : aws_launch_template.blue-template.id
     version = var.deployment_color == "green" ? aws_launch_template.green-template.latest_version : aws_launch_template.blue-template.latest_version
   }
+}
+
+resource "aws_lb" "blue-green-alb" {
+  name               = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-alb"
+  internal           = true
+  load_balancer_type = "application"
+  security_groups    = [var.alb_sg_id]
+  # subnets            = [for subnet in aws_subnet.public : subnet.id]
+  subnets            = var.aws_subnet_compute_id
+
+  # enable_deletion_protection = true
+
+  # access_logs {
+  #   bucket  = aws_s3_bucket.lb_logs.id
+  #   prefix  = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-alb"
+  #   enabled = true
+  # }
+}
+
+resource "aws_lb_target_group" "blue-green-asg-tg" {
+  name     = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-alb-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+}
+
+resource "aws_autoscaling_attachment" "blue-green-asg-tg-att" {
+  autoscaling_group_name = aws_autoscaling_group.blue-green-asg.id
+  lb_target_group_arn    = aws_lb_target_group.blue-green-asg-tg.arn
 }
