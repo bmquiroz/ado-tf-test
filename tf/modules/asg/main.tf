@@ -169,10 +169,6 @@ resource "aws_lb_listener_rule" "blue-green-alb-listener-rule" {
   }
 
   condition {
-    path_pattern {
-      values = ["/home"]
-    }
-
     http_request_method {
       values = ["GET", "HEAD"]
     }
