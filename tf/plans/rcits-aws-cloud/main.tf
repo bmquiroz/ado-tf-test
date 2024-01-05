@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
   }
   backend "s3" {
@@ -33,6 +33,7 @@ module "asg-blue-green-deploy" {
   network_interfaces          = [{security_groups = ["sg-01e52f58d04156a9c"]}]
   deployment_color            = "blue"
   vpc_id                      = "vpc-03d790a49d55d25c2"
+  alb_sg_id                   = "sg-01e52f58d04156a9c"
   tagging_standard            =  {
                                 "env"         = "dev"
                                 "application" = "rcits"

@@ -27,7 +27,7 @@ resource "aws_lb" "blue-green-alb" {
   name               = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-alb"
   internal           = true
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.lb_sg.id]
+  security_groups    = [var.alb_sg_id]
   # subnets            = [for subnet in aws_subnet.public : subnet.id]
   subnets            = [var.aws_subnet_compute_id]
 
