@@ -3,8 +3,8 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- main
+trigger: none
+# - main
 
 pool:
   vmImage: ubuntu-latest
@@ -16,7 +16,7 @@ stages:
       - job: plan
         pool:
           vmImage: ubuntu-latest
-        displayName:  terraform-init
+        displayName:  terraform-plan
         steps:
         - task: TerraformTaskV1@0
           displayName: 'terraform-init'
