@@ -18,11 +18,6 @@ data "aws_ssm_parameter" "ami" {
   name = var.ssm_parameter_name
 }
 
-resource "random_integer" "resource_id" {
-  min = 1
-  max = 50
-}
-
 resource "aws_launch_template" "blue-template" {
   name                  = var.blue_template_name
   image_id              = data.aws_ssm_parameter.ami.value
@@ -53,7 +48,7 @@ resource "aws_launch_template" "blue-template" {
     resource_type = "instance"
 
     tags = {
-      Name = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-${random_integer.resource_id.result}"
+      Name = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-${var.deployment_color}"
     }
   }
 
@@ -91,7 +86,7 @@ resource "aws_launch_template" "green-template" {
     resource_type = "instance"
 
     tags = {
-      Name = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-${random_integer.resource_id.result}"
+      Name = "${lookup(var.tagging_standard, "env")}-${lookup(var.tagging_standard, "application")}-${var.deployment_color}"
     }
   }
 
@@ -164,7 +159,7 @@ resource "aws_lb_listener_rule" "blue-green-alb-listener-rule" {
   listener_arn = aws_lb_listener.blue-green-alb-listener.arn
 
   action {
-    type             = "forward"
+    type = "forward"
     target_group_arn = aws_lb_target_group.blue-green-asg-tg.arn
   }
 
