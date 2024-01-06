@@ -53,6 +53,15 @@ stages:
         displayName:  'terraform-apply'
         steps:
         - task: TerraformTaskV1@0
+          displayName: 'terraform-init'
+          inputs:
+            provider: 'aws'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/tf/plans/rcits-aws-cloud'
+            backendServiceAWS: 'rcits-aws-1'
+            backendAWSBucketName: 'rcits-terraform'
+            backendAWSKey: 'ado-tf-test'
+        - task: TerraformTaskV1@0
           displayName: 'terraform-apply'
           inputs:
             provider: 'aws'
