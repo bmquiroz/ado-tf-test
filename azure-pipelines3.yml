@@ -1,0 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+# - main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:    
+  - stage: DEV
+    displayName: dev-deployment
+    jobs:
+      - job: plan
+        pool:
+          vmImage: ubuntu-latest
+        displayName:  terraform-plan
+        steps:
+        - task: AmazonWebServices.aws-vsts-tools.AWSShellScript.AWSShellScript@1
+          displayName: 'terratest'
+          inputs:
+            awsCredentials: gbstprod
+            regionName: 'us-east-1'
+            scriptType: inline
+            inlineScript: |
+              sudo apt-get update && sudo apt-get install -y gcc
+              install go
+              install gotestsum
+              setup gotestsum
+              cd test; go test -run TestIT_ -count=1 -timeout 30m
+            workingDirectory: '$(System.DefaultWorkingDirectory)/_aenetworks-gto_infra-bridge-terraform'
