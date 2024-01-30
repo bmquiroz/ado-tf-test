@@ -24,7 +24,12 @@ variable "associate_public_ip_address" {
   default     = null
 }
 
-variable "ssm_parameter_name" {
+variable "ssm_parameter_blue_name" {
+  type        = string
+  default     = null
+}
+
+variable "ssm_parameter_green_name" {
   type        = string
   default     = null
 }

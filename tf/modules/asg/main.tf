@@ -14,13 +14,20 @@
 #   owners = ["099720109477"]
 # }
 
-data "aws_ssm_parameter" "ami" {
-  name = var.ssm_parameter_name
+data "aws_ssm_parameter" "ami-blue" {
+  count = var.deployment_color == "blue" ? 1 : 0
+  name = var.ssm_parameter_blue_name
+}
+
+data "aws_ssm_parameter" "ami-green" {
+  count = var.deployment_color == "green" ? 1 : 0
+  name = var.ssm_parameter_green_name
 }
 
 resource "aws_launch_template" "blue-template" {
+  count                 = var.deployment_color == "blue" ? 1 : 0
   name                  = var.blue_template_name
-  image_id              = data.aws_ssm_parameter.ami.value
+  image_id              = data.aws_ssm_parameter.ami-blue.value
   instance_type         = var.instance_type
   key_name              = var.aws_key_pair
 
@@ -57,8 +64,9 @@ resource "aws_launch_template" "blue-template" {
 }
 
 resource "aws_launch_template" "green-template" {
+  count                 = var.deployment_color == "green" ? 1 : 0
   name                  = var.green_template_name
-  image_id              = data.aws_ssm_parameter.ami.value
+  image_id              = data.aws_ssm_parameter.ami-green.value
   instance_type         = var.instance_type
   key_name              = var.aws_key_pair
 
