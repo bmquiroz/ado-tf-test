@@ -28,11 +28,11 @@ module "asg-blue-green-deploy" {
   green_template_name         = "rcits-green-template"
   asg_name                    = "rcits-blue-green-asg"
   instance_type               = "t2.micro"
-  max_size                    = 4
-  min_size                    = 2
-  capacity                    = 4
+  max_size                    = 2
+  min_size                    = 1
+  capacity                    = 2
   network_interfaces          = [{security_groups = ["sg-01e52f58d04156a9c"]}]
-  deployment_color            = "green"
+  deployment_color            = "blue"
   vpc_id                      = "vpc-03d790a49d55d25c2"
   alb_sg_id                   = "sg-01e52f58d04156a9c"
   tagging_standard            =  {
