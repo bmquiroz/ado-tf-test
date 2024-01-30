@@ -15,19 +15,16 @@
 # }
 
 data "aws_ssm_parameter" "ami-blue" {
-  count = var.deployment_color == "blue" ? 1 : 0
   name = var.ssm_parameter_blue_name
 }
 
 data "aws_ssm_parameter" "ami-green" {
-  count = var.deployment_color == "green" ? 1 : 0
   name = var.ssm_parameter_green_name
 }
 
 resource "aws_launch_template" "blue-template" {
-  count                 = var.deployment_color == "blue" ? 1 : 0
   name                  = var.blue_template_name
-  image_id              = data.aws_ssm_parameter.ami-blue[0].value
+  image_id              = data.aws_ssm_parameter.ami-blue.value
   instance_type         = var.instance_type
   key_name              = var.aws_key_pair
 
@@ -64,9 +61,8 @@ resource "aws_launch_template" "blue-template" {
 }
 
 resource "aws_launch_template" "green-template" {
-  count                 = var.deployment_color == "green" ? 1 : 0
   name                  = var.green_template_name
-  image_id              = data.aws_ssm_parameter.ami-green[0].value
+  image_id              = data.aws_ssm_parameter.ami-green.value
   instance_type         = var.instance_type
   key_name              = var.aws_key_pair
 
@@ -113,8 +109,8 @@ resource "aws_autoscaling_group" "blue-green-asg" {
     # id      = aws_launch_template.green-template.id
     # version = aws_launch_template.green-template.latest_version
 
-    id      = var.deployment_color == "green" ? aws_launch_template.green-template[0].id : aws_launch_template.blue-template[0].id
-    version = var.deployment_color == "green" ? aws_launch_template.green-template[0].latest_version : aws_launch_template.blue-template[0].latest_version
+    id      = var.deployment_color == "green" ? aws_launch_template.green-template.id : aws_launch_template.blue-template.id
+    version = var.deployment_color == "green" ? aws_launch_template.green-template.latest_version : aws_launch_template.blue-template.latest_version
   }
 }
 
